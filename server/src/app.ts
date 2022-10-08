@@ -1,8 +1,10 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import 'express-async-errors';
+// import cors, { CorsOptions } from 'cors';
 
-import db from './db.js';
+import { errorHandler } from './middleware/index.js';
+import { userRouter, todoRouter } from './routes/index.js';
 
 dotenv.config();
 const app = express();
@@ -11,9 +13,12 @@ app.use(express.json());
 const port = process.env.PORT || 5000;
 
 app.get('/test', async (req, res) => {
-  const result = await db.query('SELECT * FROM todo WHERE id = $1', [3]);
-  console.log(result);
-  res.end();
+  res.json({ response: 'test' });
 });
+
+app.use('/api/user', userRouter);
+app.use('/api/todos', todoRouter);
+
+app.use(errorHandler);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
