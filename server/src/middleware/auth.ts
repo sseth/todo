@@ -9,7 +9,7 @@ const auth: RequestHandler = (req, res, next) => {
     !authHeader || !authHeader.startsWith('Bearer ');
 
   if (authHeaderMissingOrInvalid)
-    throw new NoTokenError('Authentication failed: token not provided');
+    throw new NoTokenError();
 
   const token = authHeader?.split(' ')[1];
   const payload = jwt.verify(token, process.env.JWT_SECRET as string);
