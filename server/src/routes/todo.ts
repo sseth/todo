@@ -7,10 +7,6 @@ import { BadRequestError, NotFoundError } from '../errors/index.js';
 const router = Router();
 router.use(auth);
 
-const test: RequestHandler = async (req, res) => {
-  throw new Error('testing halo chek');
-};
-
 const create: RequestHandler = async (req, res) => {
   const { id } = req.user;
   const { text } = req.body;
@@ -77,6 +73,5 @@ const edit: RequestHandler = async (req, res) => {
 
 router.route('/').post(create).get(getAll);
 router.route('/:id').get(getOne).patch(edit).delete(remove);
-router.route('/test').get(test);
 
 export default router;

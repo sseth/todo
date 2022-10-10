@@ -21,4 +21,5 @@ app.use('/api/todos', todoRouter);
 
 app.use(errorHandler);
 
+// eslint-disable-next-line
 app.listen(port, () => console.log(`Listening on port ${port}`));
