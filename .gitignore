@@ -4,3 +4,6 @@
 node_modules/
 dist/
 ignore/
+todo.code-workspace
+client/src/components/Sidebar
+client/src/components/Landing

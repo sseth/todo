@@ -3,77 +3,9 @@
 @tailwind utilities;
 
 body {
-  background-image: url('/img/bg-tablet-pattern.svg');
-  background-repeat: no-repeat;
-  background-size: 800px;
-  background-position: 90% -25%;
+  height: 100vh;
 }
 
-#cta div {
-  background-image: url('/img/bg-simplify-section-desktop.svg');
-  background-repeat: no-repeat;
+#root {
+  height: 100%;
 }
-
-@media (max-width: 700px) {
-  body {
-    background-size: 500px;
-    background-position: 50px -50px;
-  }
-  
-  #cta div {
-    background-image: url('/img/bg-simplify-section-mobile.svg');
-  }
-}
-
-.hamburger {
-  height: 30px;
-  width: 30px;
-  cursor: pointer;
-  position: relative;
-  /* border: 1px solid black; */
-}
-
-.hamburger-top,
-.hamburger-middle,
-.hamburger-bottom {
-  width: 24px;
-  height: 2px;
-  background-color: hsl(233, 12%, 13%);
-  position: absolute;
-  top: 6px;
-  left: 2px;
-  transition: all 0.5s;
-}
-
-.hamburger-middle {
-  transform: translateY(7px);
-}
-
-.hamburger-bottom {
-  transform: translateY(14px);
-}
-
-.open {
-  transform: rotate(90deg);
-}
-
-.open .hamburger-top {
-  transform: rotate(45deg) translateY(5px) translateX(5px);
-}
-
-.open .hamburger-middle {
-  display: none;
-}
-
-.open .hamburger-bottom {
-  transform: rotate(-45deg) translateY(5px) translateX(-5px);
-}
-
-/* @layer components {
-  .sidebar-icon {
-    @apply relative my-2 mx-auto flex h-12 w-12 cursor-pointer 
-      items-center justify-center rounded-3xl bg-gray-700 text-green-500
-      shadow-lg transition-all duration-200 ease-linear
-      hover:rounded-xl hover:bg-green-600 hover:text-white;
-  }
-} */

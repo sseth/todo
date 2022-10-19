@@ -1,7 +1,13 @@
-import { ErrorRequestHandler } from 'express';
+// import { ErrorRequestHandler } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import { CustomError } from '../errors';
 
-// eslint-disable-next-line
-const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+const errorHandler = (
+  err: CustomError,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   // eslint-disable-next-line
   console.error(JSON.stringify(err, ['message', 'arguments', 'type', 'name']));
   const name = err.name;
@@ -20,6 +26,7 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     error.message ===
     'duplicate key value violates unique constraint "users_name_key"'
   ) {
+    error.status = 409;
     error.message = 'username not available';
   }
 
@@ -27,6 +34,7 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     error.message = 'invalid id';
 
   res.status(error.status).json({ error: error.message });
+  next();
 };
 
 export default errorHandler;

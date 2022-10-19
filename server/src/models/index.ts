@@ -13,9 +13,11 @@ export interface User {
   password: string;
 }
 
+
+
 export interface Todo {
   id: string;
   text: string;
-  createdBy: string;
+  // createdBy: string;
   completed: boolean;
 }

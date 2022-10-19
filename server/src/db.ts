@@ -10,6 +10,7 @@ type queryParam = number | string | boolean;
 // console.log('creating pool');
 const pool = new Pool();
 pool.on('error', (err) => {
+  // eslint-disable-next-line
   console.error('Error:', err);
 });
 

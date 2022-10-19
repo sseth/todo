@@ -1,15 +1,16 @@
-import { Router, RequestHandler } from 'express';
+import { Router, Response, Request } from 'express';
 
 import db from '../db.js';
+import { Todo } from '../models/index.js';
 import { auth } from '../middleware/index.js';
 import { BadRequestError, NotFoundError } from '../errors/index.js';
 
 const router = Router();
 router.use(auth);
 
-const create: RequestHandler = async (req, res) => {
+const create = async (req: Request, res: Response) => {
   const { id } = req.user;
-  const { text } = req.body;
+  const { text } = req.body as { text: string };
 
   if (!text) throw new BadRequestError('Todo text required');
 
@@ -18,10 +19,10 @@ const create: RequestHandler = async (req, res) => {
     [text, id]
   );
 
-  res.status(201).json({ created: result.rows[0] });
+  res.status(201).json({ created: result.rows[0] as Todo });
 };
 
-const getAll: RequestHandler = async (req, res) => {
+const getAll = async (req: Request, res: Response) => {
   const result = await db.query(
     'SELECT id, text, completed FROM todos WHERE created_by = $1',
     [req.user.id]
@@ -30,7 +31,7 @@ const getAll: RequestHandler = async (req, res) => {
   res.json({ count: result.rowCount, todos: result.rows });
 };
 
-const getOne: RequestHandler = async (req, res) => {
+const getOne = async (req: Request, res: Response) => {
   const { id } = req.params; // TODO: validate
   const result = await db.query(
     'SELECT id, text, completed FROM todos WHERE id = $1 AND created_by = $2',
@@ -39,10 +40,10 @@ const getOne: RequestHandler = async (req, res) => {
 
   if (!result.rows[0]) throw new NotFoundError();
 
-  res.json({ todo: result.rows[0] });
+  res.json({ todo: result.rows[0] as Todo });
 };
 
-const remove: RequestHandler = async (req, res) => {
+const remove = async (req: Request, res: Response) => {
   const { id } = req.params; // TODO: validate
   const result = await db.query(
     'DELETE FROM todos WHERE id = $1 AND created_by = $2 RETURNING *',
@@ -54,11 +55,9 @@ const remove: RequestHandler = async (req, res) => {
   res.json({ msg: `deleted todo ${id}` });
 };
 
-const edit: RequestHandler = async (req, res) => {
+const edit = async (req: Request, res: Response) => {
   const { id } = req.params;
-  if (!req.body.text || !(typeof req.body.completed === 'boolean'))
-    throw new BadRequestError();
-  const updates: { text: string; completed: boolean } = req.body;
+  const updates = req.body as { text: string; completed: boolean };
 
   const result = await db.query(
     'UPDATE todos SET text = $1, completed = $2' +
@@ -68,7 +67,7 @@ const edit: RequestHandler = async (req, res) => {
 
   if (!result.rowCount) throw new NotFoundError();
 
-  res.json({ todo: result.rows[0] });
+  res.json({ todo: result.rows[0] as Todo });
 };
 
 router.route('/').post(create).get(getAll);
