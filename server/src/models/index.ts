@@ -20,4 +20,5 @@ export interface Todo {
   text: string;
   // createdBy: string;
   completed: boolean;
+  // created: Date;
 }

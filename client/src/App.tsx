@@ -44,7 +44,13 @@ function App() {
   }, [token]);
 
   const todoElements = todos.map((todo) => (
-    <Todo key={todo.id} id={todo.id} text={todo.text} setTodos={setTodos} />
+    <Todo
+      key={todo.id}
+      id={todo.id}
+      text={todo.text}
+      completed={todo.completed}
+      setTodos={setTodos}
+    />
   ));
 
   const stuff = (
@@ -52,7 +58,12 @@ function App() {
       <Navbar logout={logout} />
       <div className="container mx-auto flex flex-col items-center p-8">
         <AddTodo setTodos={setTodos} />
-        <div className="mt-10">{todoElements}</div>
+        <div
+          className="container mt-8 flex max-w-[900px] flex-col justify-center
+            space-y-4 px-2 md:px-20"
+        >
+          {todoElements}
+        </div>
       </div>
     </>
   );

@@ -24,7 +24,7 @@ const create = async (req: Request, res: Response) => {
 
 const getAll = async (req: Request, res: Response) => {
   const result = await db.query(
-    'SELECT id, text, completed FROM todos WHERE created_by = $1',
+    'SELECT id, text, completed FROM todos WHERE created_by = $1 ORDER BY created',
     [req.user.id]
   );
 
@@ -71,6 +71,13 @@ const edit = async (req: Request, res: Response) => {
 };
 
 router.route('/').post(create).get(getAll);
+
+router.route('/test').get(async (req, res) => {
+  const x = await db.query('SELECT created FROM todos');
+  // console.log(x.rows[0].created)
+  res.json({ data: x.rows });
+});
+
 router.route('/:id').get(getOne).patch(edit).delete(remove);
 
 export default router;

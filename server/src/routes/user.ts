@@ -8,13 +8,6 @@ import { User, CreateUserRequest } from '../models/index.js';
 
 const router = Router();
 
-router.route('/test').get(async (req, res) => {
-  const x = await db.query('SELECT * FROM todos WHERE created_by = $1', [
-    req.user.id,
-  ]);
-  res.json({ data: x.rows });
-});
-
 // TODO: request schema validation
 const createUser = async (req: Request, res: Response) => {
   const user = req.body as CreateUserRequest;

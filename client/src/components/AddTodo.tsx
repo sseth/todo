@@ -4,7 +4,7 @@ import React, { useState, KeyboardEvent } from 'react';
 import { todo } from '../types';
 
 interface props {
-  setTodos: (newState: todo[] | ((prevState: todo[]) => todo[])) => void
+  setTodos: (newState: todo[] | ((prevState: todo[]) => todo[])) => void;
 }
 
 function AddTodo({ setTodos }: props) {
@@ -18,7 +18,7 @@ function AddTodo({ setTodos }: props) {
     try {
       const res = await axios.post('/todos', { text: newTodo });
       const data = res.data as { created: todo };
-      setTodos((prevState) => ([ ...prevState, data.created ]));
+      setTodos((prevState) => [...prevState, data.created]);
       setNewTodo('');
     } catch (error) {
       // TODO:
@@ -32,7 +32,7 @@ function AddTodo({ setTodos }: props) {
   };
 
   return (
-    <div className="flex w-full items-center justify-center space-x-2">
+    <div className="flex w-full max-w-[900px] items-center justify-center space-x-2">
       <input
         type="text"
         value={newTodo}
