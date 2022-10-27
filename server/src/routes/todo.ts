@@ -57,12 +57,16 @@ const remove = async (req: Request, res: Response) => {
 
 const edit = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const updates = req.body as { text: string; completed: boolean };
+  const update = req.body as {
+    key: 'text' | 'completed';
+    value: string | boolean;
+  };
 
   const result = await db.query(
-    'UPDATE todos SET text = $1, completed = $2' +
-      'WHERE id = $3 AND created_by = $4 RETURNING id, text, completed',
-    [updates.text, updates.completed, id, req.user.id]
+    `UPDATE todos SET ${update.key} = $1 ` +
+      'WHERE id = $2 AND created_by = $3 ' +
+      'RETURNING id, text, completed',
+    [update.value, id, req.user.id]
   );
 
   if (!result.rowCount) throw new NotFoundError();

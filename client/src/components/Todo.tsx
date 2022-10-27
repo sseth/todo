@@ -1,5 +1,6 @@
 import axios from 'axios';
-// import { useState } from 'react';
+import debounce from 'lodash.debounce';
+import React, { useCallback, useState } from 'react';
 
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,11 +10,45 @@ import { todo } from '../types';
 interface TodoProps {
   id: string;
   text: string;
-  completed: boolean;
+  done: boolean;
   setTodos: (newState: todo[] | ((prevState: todo[]) => todo[])) => void;
 }
 
-function Todo({ text, id, completed, setTodos }: TodoProps) {
+// const debounce = (fn: (...args: any[]) => void, timeout = 300) => {
+//   console.log('in debounce');
+//   let timer: NodeJS.Timeout;
+//   return (...args: unknown[]) => {
+//     console.log(args);
+//     console.log('clearing timer');
+//     clearTimeout(timer);
+//     timer = setTimeout(() => { fn(args) }, timeout);
+//     console.log('running debounced function in', timeout);
+//   };
+// };
+
+function Todo({ text, id, done, setTodos }: TodoProps) {
+  // console.log('rendering todo', id);
+
+  const [todoText, setTodoText] = useState(text);
+  const [completed, setCompleted] = useState(done);
+
+  const editTodo = async (text: string) => {
+    try {
+      // console.log('sending request:', text);
+      await axios.patch(`/todos/${id}`, { key: 'text', value: text });
+    } catch (error) {
+      // TODO:
+      console.error(error);
+    }
+  };
+
+  const debouncedEdit = useCallback(debounce(editTodo, 1500), []);
+
+  const update = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTodoText(e.target.value);
+    await debouncedEdit(e.target.value);
+  };
+
   const deleteTodo = async () => {
     try {
       await axios.delete(`/todos/${id}`);
@@ -24,11 +59,16 @@ function Todo({ text, id, completed, setTodos }: TodoProps) {
     }
   };
 
-  const completeTodo = async () => {
+  const toggleCompleted = async () => {
     try {
-      await axios.patch(`/todos/${id}`, { text, completed: !completed });
+      await axios.patch(`/todos/${id}`, {
+        key: 'completed',
+        value: !completed,
+      });
+      setCompleted((prev) => !prev);
+
       const res = await axios('/todos');
-      const updatedTodos = (res.data as { todos: todo[]; count: number }).todos;
+      const updatedTodos = (res.data as { todos: todo[] }).todos;
       setTodos(updatedTodos);
     } catch (error) {
       // TODO:
@@ -45,19 +85,20 @@ function Todo({ text, id, completed, setTodos }: TodoProps) {
         type="checkbox"
         name="completed"
         checked={completed}
-        onChange={completeTodo}
+        onChange={toggleCompleted}
         className="peer ml-2 h-6 w-6 self-center"
         // h-2 w-2 appearance-none self-center border checked:bg-green-500"
       />
-      <span
-        className="truncate pl-2 group-hover:mr-8
+      <input
+        type="text"
+        value={todoText}
+        onChange={update}
+        className="truncate pl-2 focus:outline-none group-hover:mr-8
         peer-checked:text-gray-400 peer-checked:line-through"
-      >
-        {text}
-      </span>
+      />
       <button
         onClick={deleteTodo}
-        className="absolute right-3 bg-white opacity-0 hover:text-red-500 
+        className="absolute right-5 bg-white text-gray-400 opacity-0 hover:text-red-500 
           group-hover:opacity-100 group-hover:transition group-hover:duration-200"
       >
         <FontAwesomeIcon icon={faXmark} />

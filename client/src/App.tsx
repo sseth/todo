@@ -5,6 +5,7 @@ import Todo from './components/Todo';
 import Navbar from './components/Nav';
 import Login from './components/Login';
 import AddTodo from './components/AddTodo';
+import Completed from "./components/Completed";
 import { todo, getTodosResponse } from './types';
 
 axios.defaults.baseURL = 'http://localhost:5000/api';
@@ -12,6 +13,8 @@ axios.defaults.baseURL = 'http://localhost:5000/api';
 // axios.interceptors.response.use();
 
 function App() {
+  // console.log('rendering app');
+
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [todos, setTodos] = useState([] as todo[]);
 
@@ -27,6 +30,8 @@ function App() {
   };
 
   const getTodos = async () => {
+    console.log('fetching todos');
+
     try {
       const res = await axios('/todos');
       const data = res.data as getTodosResponse;
@@ -43,15 +48,37 @@ function App() {
     void getTodos();
   }, [token]);
 
-  const todoElements = todos.map((todo) => (
+  // const todoElements = useCallback(
+  //   () =>
+  //     todos.map((todo) => (
+  //       <Todo
+  //         key={todo.id}
+  //         id={todo.id}
+  //         text={todo.text}
+  //         completed={todo.completed}
+  //         setTodos={setTodos}
+  //       />
+  //     )),
+  //   [todos]
+  // );
+
+  const getTodoElement = (todo: todo) => (
     <Todo
       key={todo.id}
       id={todo.id}
       text={todo.text}
-      completed={todo.completed}
+      done={todo.completed}
       setTodos={setTodos}
     />
-  ));
+  );
+
+  const todoElements = todos
+    .filter((todo) => !todo.completed)
+    .map(getTodoElement);
+
+  const completedTodos = todos
+    .filter((todo) => todo.completed)
+    .map(getTodoElement);
 
   const stuff = (
     <>
@@ -64,6 +91,7 @@ function App() {
         >
           {todoElements}
         </div>
+        <Completed todos={completedTodos} />
       </div>
     </>
   );
