@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "allowJs": true,
+    "outDir": "./dist",
+    "target": "ES2016",
+    "module": "ES2020",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": ["./src/@types", "./node_modules/@types"]
+  }
+}

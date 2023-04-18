@@ -1,0 +1,32 @@
+{
+  "root": true,
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": ["./client/tsconfig.json", "./server/tsconfig.json"]
+  },
+  "ignorePatterns": [
+    "**/config/*",
+    "**/node_modules/*",
+    "**/dist/*",
+    "*.config.*"
+  ],
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    // "no-console": "warn",
+    "@typescript-eslint/no-empty-function": "warn",
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": {
+          "attributes": false
+        }
+      }
+    ]
+  }
+}

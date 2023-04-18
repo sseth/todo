@@ -48,20 +48,6 @@ function App() {
     void getTodos();
   }, [token]);
 
-  // const todoElements = useCallback(
-  //   () =>
-  //     todos.map((todo) => (
-  //       <Todo
-  //         key={todo.id}
-  //         id={todo.id}
-  //         text={todo.text}
-  //         completed={todo.completed}
-  //         setTodos={setTodos}
-  //       />
-  //     )),
-  //   [todos]
-  // );
-
   const getTodoElement = (todo: todo) => (
     <Todo
       key={todo.id}
